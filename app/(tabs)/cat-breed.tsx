@@ -41,6 +41,8 @@ export default function CatBreedScreen() {
   }, []);
 
   const apiKey = Constants.expoConfig?.extra?.OPENAI_API_KEY;
+  
+
   const callAI = async (base64Image: string) => {
     setLoading(true);
     setAiResult(null);
@@ -129,7 +131,7 @@ export default function CatBreedScreen() {
       >
         <SafeAreaView style={styles.overlay}>
           <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>AI Cat Breed Detector 🧠🐾</Text>
+            <Text style={styles.title}>Cat Breed Detector Powered by AI 🧠🐾</Text>
 
             <View style={styles.buttonSpacing}>
               <Button title="📷 Take Photo" onPress={() => pickImage(true)} />

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cats-collection",
-    "slug": "cats",
+    "name": "catalyze",
+    "slug": "catalyze",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Cat_images/icon.png",
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/Cat_images/icon.png",
         "backgroundColor": "#ffffff"
       }
     },
