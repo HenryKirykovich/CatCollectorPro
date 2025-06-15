@@ -1,8 +1,9 @@
 // Simplified CatProvider.tsx (no React Query)
+
 import React, { useState, useEffect, ReactNode } from 'react';
 import { CatContext, Cat } from './CatContext';
 import { supabase } from '../../lib/supabase';
-import { deleteCatWithImage } from '../../lib/deleteCatWithImage'; // ✅ импорт функции
+import { deleteCatWithImage } from '../../lib/deleteCatWithImage';
 
 type CatProviderProps = { children: ReactNode };
 
@@ -10,13 +11,41 @@ export const CatProvider = ({ children }: CatProviderProps) => {
   const [cats, setCats] = useState<Cat[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedCat, setSelectedCat] = useState<Cat | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
+  // 🔁 Загружаем userId и обновляем список котов при каждом изменении userId
   useEffect(() => {
-    loadCats();
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      if (session?.user?.id) {
+        setUserId(session.user.id);
+      } else {
+        setUserId(null);
+        setCats([]);
+        setFavorites([]);
+      }
+    };
+
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      loadUser(); // ⚡ когда сменился пользователь — загружаем нового и котов
+    });
+
+    loadUser();
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
-  const loadCats = async () => {
-    const { data, error } = await supabase.from('cats').select('*');
+  useEffect(() => {
+    if (userId) {
+      loadCats(userId);
+    }
+  }, [userId]);
+
+  const loadCats = async (uid: string) => {
+    const { data, error } = await supabase.from('cats').select('*').eq('user_id', uid);
     if (!error && data) {
       setCats(data);
       const favIds = data.filter((cat) => cat.favorite).map((cat) => cat.id!);
@@ -25,7 +54,12 @@ export const CatProvider = ({ children }: CatProviderProps) => {
   };
 
   const addCat = async (catData: Omit<Cat, 'id'>): Promise<Cat | null> => {
-    const { data, error } = await supabase.from('cats').insert(catData).select().single();
+    if (!userId) return null;
+    const { data, error } = await supabase
+      .from('cats')
+      .insert({ ...catData, user_id: userId })
+      .select()
+      .single();
     if (!error && data) {
       setCats((prev) => [...prev, data]);
       return data;
@@ -41,7 +75,7 @@ export const CatProvider = ({ children }: CatProviderProps) => {
   };
 
   const removeCat = async (cat: Cat) => {
-    const success = await deleteCatWithImage(cat); // ✅ удаление и из storage, и из базы
+    const success = await deleteCatWithImage(cat);
     if (success && cat.id) {
       setCats((prev) => prev.filter((c) => c.id !== cat.id));
       setFavorites((prev) => prev.filter((favId) => favId !== cat.id));
@@ -71,7 +105,7 @@ export const CatProvider = ({ children }: CatProviderProps) => {
         setSelectedCat,
         addCat,
         updateCat,
-        removeCat, // ✅ уже обновлён
+        removeCat,
         toggleFavorite,
       }}
     >
@@ -79,6 +113,38 @@ export const CatProvider = ({ children }: CatProviderProps) => {
     </CatContext.Provider>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
