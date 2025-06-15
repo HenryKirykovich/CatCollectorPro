@@ -14,42 +14,18 @@ import {
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 
-export default function RegisterScreen() {
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const router = useRouter();
 
-  const handleRegister = async () => {
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (signUpError) {
-      Alert.alert('Registration Error', signUpError.message);
-      return;
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      Alert.alert('Login Error', error.message);
+    } else {
+      router.replace('/(tabs)'); // переход к основной части приложения
     }
-
-    const userId = signUpData.user?.id;
-    if (userId) {
-      const { error: insertError } = await supabase.from('users').insert({
-        id: userId,
-        email,
-        full_name: fullName,
-        created_at: new Date().toISOString(),
-      });
-
-      if (insertError) {
-        console.error('❌ Ошибка вставки в таблицу users:', insertError.message);
-        Alert.alert('User Insert Error', insertError.message);
-        return;
-      }
-    }
-
-    Alert.alert('Success', 'Check your email to confirm your registration.');
-    router.replace('/login');
   };
 
   return (
@@ -65,22 +41,8 @@ export default function RegisterScreen() {
       >
         <SafeAreaView style={styles.overlay}>
           <View style={styles.container}>
-            <Text style={styles.title}>Create Your Account</Text>
+            <Text style={styles.title}>Welcome Back</Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Full Name"
-              value={fullName}
-              onChangeText={setFullName}
-              placeholderTextColor="#888"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Display Name (optional)"
-              value={displayName}
-              onChangeText={setDisplayName}
-              placeholderTextColor="#888"
-            />
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -99,12 +61,12 @@ export default function RegisterScreen() {
               placeholderTextColor="#888"
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
-              <Text style={styles.buttonText}>Sign Up</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Log In</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.replace('/login')}>
-              <Text style={styles.link}>Already have an account? Log in</Text>
+            <TouchableOpacity onPress={() => router.replace('/register')}>
+              <Text style={styles.link}>Don't have an account? Sign up</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
