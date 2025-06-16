@@ -1,3 +1,8 @@
+// This file is part of the Cat App project.
+// page with favorite cats.
+// app/(tabs)/favorite.tsx
+
+
 import React, { useContext } from 'react';
 import {
   View,

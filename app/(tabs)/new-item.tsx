@@ -1,6 +1,5 @@
-// (tabs)/new-item.tsx
-
-// app/(tabs)/new-item.tsx
+// app/(tabs)/new-item.tsx  
+// button add that add new item , change to edit item if selectedCat is set
 
 import React, { useState, useContext, useEffect } from 'react';
 import {
@@ -16,6 +15,7 @@ import {
   ScrollView,
   ImageBackground,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -32,6 +32,7 @@ export default function NewItemScreen() {
   const [image, setImage] = useState<string | null>(null);
   const [errors, setErrors] = useState({ title: '', description: '', origin: '' });
   const [forceAddNew, setForceAddNew] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -117,26 +118,22 @@ export default function NewItemScreen() {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    setIsSubmitting(true);
     let uploadedImageUrl: string | undefined;
-    const isNewImageUploaded = image && image.startsWith('file:'); // ✅ Фикс
+    const isNewImageUploaded = image && image.startsWith('file:');
 
-    if (isNewImageUploaded) {
-      try {
+    try {
+      if (isNewImageUploaded) {
         const fileName = `cat_${Date.now()}.jpg`;
         const url = await uploadImageAsync(image, fileName);
         if (!url) {
           Alert.alert('Upload failed');
+          setIsSubmitting(false);
           return;
         }
         uploadedImageUrl = url;
-      } catch (e) {
-        console.error('❌ Upload error:', e);
-        Alert.alert('Upload error', 'Unable to upload image.');
-        return;
       }
-    }
 
-    try {
       if (selectedCat?.id && !forceAddNew) {
         await updateCat({
           ...selectedCat,
@@ -155,17 +152,19 @@ export default function NewItemScreen() {
 
         if (!result) {
           Alert.alert('Error', 'Failed to save new cat.');
+          setIsSubmitting(false);
           return;
         }
       }
 
       Alert.alert('Success', selectedCat?.id && !forceAddNew ? 'Cat updated!' : 'New cat saved!');
-      setSelectedCat(null);
-      setForceAddNew(false);
+      clearFields();
       router.replace('/');
     } catch (e) {
       console.error('❌ Submit failed:', e);
       Alert.alert('Error', 'Something went wrong. Try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,6 +176,15 @@ export default function NewItemScreen() {
       style={styles.background}
       resizeMode="cover"
     >
+      {isSubmitting && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingBox}>
+            <ActivityIndicator size="large" color="#333" />
+            <Text style={styles.loadingText}>Saving, please wait...</Text>
+          </View>
+        </View>
+      )}
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -233,7 +241,7 @@ export default function NewItemScreen() {
 
             {image && (
               <>
-                <Image source={{ uri: image }} style={styles.image} />
+                <Image source={{ uri: image }} style={styles.image} resizeMode="contain" />
                 <View style={styles.buttonSpacing}>
                   <Button title="Remove Image" onPress={removeImage} color="#d9534f" />
                 </View>
@@ -265,6 +273,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
+    paddingBottom: 100, // 🔽 помогает не обрезать кнопки внизу
   },
   error: {
     color: 'red',
@@ -272,8 +281,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   image: {
-    borderRadius: 8,
-    height: 200,
+    aspectRatio: 4 / 3,
+    borderRadius: 16,
     marginVertical: 10,
     width: '100%',
   },
@@ -288,7 +297,35 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginTop: 12,
+    marginTop: 24,
+  },
+  loadingBox: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    elevation: 5,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  loadingOverlay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 99,
+  },
+  loadingText: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
   overlay: {
     backgroundColor: 'rgba(255,255,255,0.85)',
@@ -297,3 +334,305 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 60 : 15,
   },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,10 +22,14 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
+  if (loaded) {
+    const timer = setTimeout(() => {
       SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    }, 2000); // показать сплеш минимум 2 секунды
+
+    return () => clearTimeout(timer);
+  }
+}, [loaded]);
 
   if (!loaded) return null;
 

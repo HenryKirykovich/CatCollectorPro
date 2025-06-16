@@ -9,18 +9,34 @@ export default function Index() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    // Получить текущую сессию
+    // Инициализация сессии
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setIsLoading(false);
     });
+
+    // Подписка на изменения auth
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    // Очистка подписки
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
   }, []);
 
   if (isLoading) return null;
 
-  // Если сессия есть — в (tabs), иначе — на регистрацию
-  return <Redirect href={session ? '/(tabs)' : '/register'} />;
+  return <Redirect href={session ? '/(tabs)' : '/login'} />;
 }
+
+
+
+
+
+
+
 
 
 

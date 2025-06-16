@@ -1,8 +1,5 @@
-// (tabs)/cat-breed    powered AI 
-
 import Constants from 'expo-constants';
 import React, { useState, useEffect, useContext } from 'react';
-
 import {
   View,
   Text,
@@ -30,6 +27,7 @@ export default function CatBreedScreen() {
     description: string;
     origin: string;
   } | null>(null);
+
   const router = useRouter();
   const { setSelectedCat } = useContext(CatContext);
 
@@ -41,7 +39,6 @@ export default function CatBreedScreen() {
   }, []);
 
   const apiKey = Constants.expoConfig?.extra?.OPENAI_API_KEY;
-  
 
   const callAI = async (base64Image: string) => {
     setLoading(true);
@@ -90,7 +87,10 @@ export default function CatBreedScreen() {
       });
     } catch (e) {
       console.error('❌ AI error:', e);
-      Alert.alert('AI Error', 'Failed to parse AI response.');
+      Alert.alert(
+        'Image Not Recognized',
+        'Sorry, the image is too blurry or unclear. Please try again with a higher quality or closer photo of the cat.'
+      );
     }
     setLoading(false);
   };
@@ -130,7 +130,11 @@ export default function CatBreedScreen() {
         keyboardVerticalOffset={60}
       >
         <SafeAreaView style={styles.overlay}>
-          <ScrollView contentContainerStyle={styles.container}>
+          <ScrollView
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <Text style={styles.title}>Cat Breed Detector Powered by AI 🧠🐾</Text>
 
             <View style={styles.buttonSpacing}>
@@ -140,7 +144,13 @@ export default function CatBreedScreen() {
               <Button title="🖼️ Choose from Gallery" onPress={() => pickImage(false)} />
             </View>
 
-            {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+            {imageUri && (
+              <Image
+                source={{ uri: imageUri }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            )}
             {loading && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
 
             {aiResult && (
@@ -177,6 +187,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
+    paddingBottom: 120, // 👉 больше места снизу
   },
   fillButton: {
     alignItems: 'center',
@@ -191,8 +202,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    borderRadius: 8,
-    height: 200,
+    alignSelf: 'center',
+    aspectRatio: 4 / 3,
+    borderRadius: 16,
     marginVertical: 10,
     width: '100%',
   },
@@ -218,6 +230,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    marginTop: 32, // 👉 увеличенный отступ сверху
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',

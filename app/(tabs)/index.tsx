@@ -129,37 +129,17 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  overlay: {
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 15,
-  },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  logout: {
-    color: '#007AFF',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  username: {
-    fontSize: 14,
-    color: '#333',
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
   },
   innerContainer: {
     alignSelf: 'center',
     flex: 1,
     maxWidth: 600,
     width: '100%',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
   },
   input: {
     alignSelf: 'center',
@@ -175,6 +155,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 140,
   },
+  logout: {
+    color: '#007AFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  overlay: {
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: Platform.OS === 'ios' ? 60 : 15,
+  },
   searchButton: {
     alignSelf: 'center',
     backgroundColor: '#007AFF',
@@ -188,5 +179,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  username: {
+    color: '#333',
+    fontSize: 14,
   },
 });
