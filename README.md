@@ -4,7 +4,7 @@ This is a 3-page React Native application built using Expo and Supabase as part 
 ## Demo & Preview
 
 **Preview via Expo**  
-[View latest update](https://expo.dev/accounts/groo21021984/projects/cats/updates/684c3353-186e-4e05-b963-846e34d4adad)
+[View latest update](https://expo.dev/accounts/groo21021984/projects/catalyze/fingerprints/8a72521c8118beb834ac52c13ffbb44dc613a09d)
 
 📱 **Run on Expo Go**  
 Open terminal in this folder and run:
