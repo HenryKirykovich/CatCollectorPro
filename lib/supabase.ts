@@ -1,11 +1,13 @@
 // libs/supabase.ts
-// start point for connection to SupaBase
-// This file is used to create a Supabase client instance
+// Connects to Supabase using environment variables
 import { createClient } from '@supabase/supabase-js';
-import React from 'react';
+import Constants from 'expo-constants';
 
-const supabaseUrl = 'https://drpxmxxffhdrmpidgkam.supabase.co';
-const supabaseKey =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRycHhteHhmZmhkcm1waWRna2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwMDY5MTcsImV4cCI6MjA2MjU4MjkxN30.g_-SUfA8MIqJe7V9fxTv-ikYCwP0Zwj5dXBHlUV2Ar4';
+const supabaseUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseKey = Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('❌ Missing Supabase config in .env or app.config.ts');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseKey);

@@ -12,9 +12,9 @@ export default {
     icon: './assets/images/Cat_images/icon.png',
 
     splash: {
-      image: './assets/images/Cat_images/splash.png', // ✅ путь к PNG-файлу splash-экрана
-      resizeMode: 'contain', // или 'cover'
-      backgroundColor: '#ffffff', // ✅ можно заменить на любой
+      image: './assets/images/Cat_images/splash.png',
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff',
     },
 
     ios: {
@@ -44,11 +44,13 @@ export default {
 
     extra: {
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
       eas: {
         projectId: '5e72242f-4cee-473d-bb5f-f4a56cf35839',
       },
       'expo-router': {
-        appRoot: 'app', // 👈 Указываем корень маршрутов
+        appRoot: 'app',
       },
     },
 

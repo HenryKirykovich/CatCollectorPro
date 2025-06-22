@@ -1,4 +1,8 @@
-import Constants from 'expo-constants';
+// This component is part of the Cat Breeds app.
+// It allows users to take or select a photo of a cat,
+// sends it to a backend server for AI analysis,
+// and displays the detected breed, description, and origin.
+
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
@@ -20,8 +24,13 @@ import { useRouter } from 'expo-router';
 import { CatContext } from '../../components/context/CatContext';
 
 export default function CatBreedScreen() {
+  // Stores the selected image URI
   const [imageUri, setImageUri] = useState<string | null>(null);
+
+  // Indicates whether the app is loading the AI result
   const [loading, setLoading] = useState(false);
+
+  // Stores the AI analysis result
   const [aiResult, setAiResult] = useState<{
     title: string;
     description: string;
@@ -31,6 +40,7 @@ export default function CatBreedScreen() {
   const router = useRouter();
   const { setSelectedCat } = useContext(CatContext);
 
+  // Request permissions for camera and media access
   useEffect(() => {
     (async () => {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -38,63 +48,46 @@ export default function CatBreedScreen() {
     })();
   }, []);
 
-  const apiKey = Constants.expoConfig?.extra?.OPENAI_API_KEY;
-
+  // Sends base64 image to backend for AI analysis
   const callAI = async (base64Image: string) => {
     setLoading(true);
     setAiResult(null);
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch('http://44.230.52.71:3000/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: `Analyze this image of a cat. Return the result as a JSON object with three fields:\n{\n  "title": "Breed name in English",\n  "description": "One or two short sentences describing its physical and personality traits.",\n  "origin": "Country or region where this breed originated"\n}`,
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: `data:image/jpeg;base64,${base64Image}`,
-                  },
-                },
-              ],
-            },
-          ],
-          max_tokens: 500,
+          image: `data:image/jpeg;base64,${base64Image}`,
         }),
       });
 
-      const json = await response.json();
-      const raw = json.choices?.[0]?.message?.content;
-      const extracted = raw?.match(/\{[\s\S]*?\}/);
-      if (!extracted) throw new Error('No JSON found.');
-      const data = JSON.parse(extracted[0]);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
 
-      if (!data.title || !data.description || !data.origin) throw new Error('Incomplete data');
+      const data = await response.json();
+
+      if (!data.title || !data.description || !data.origin)
+        throw new Error('Incomplete data from backend.');
+
       setAiResult({
         title: data.title.trim(),
         description: data.description.trim(),
         origin: data.origin.trim(),
       });
     } catch (e) {
-      console.error('❌ AI error:', e);
+      console.error('❌ Backend AI error:', e);
       Alert.alert(
         'Image Not Recognized',
-        'Sorry, the image is too blurry or unclear. Please try again with a higher quality or closer photo of the cat.'
+        'Sorry, the image is too blurry or unclear. Please try again with a clearer photo of the cat.'
       );
     }
     setLoading(false);
   };
 
+  // Opens camera or gallery to select an image and sends it for analysis
   const pickImage = async (fromCamera: boolean) => {
     const result = fromCamera
       ? await ImagePicker.launchCameraAsync({ base64: true, quality: 0.7 })
@@ -106,6 +99,7 @@ export default function CatBreedScreen() {
     }
   };
 
+  // Sets the selected cat data in global context and navigates to the form
   const handleFillForm = () => {
     if (aiResult && imageUri) {
       setSelectedCat({
@@ -135,8 +129,9 @@ export default function CatBreedScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>Cat Breed Detector Powered by AI 🧠🐾</Text>
+            <Text style={styles.title}>Cat Breed Detector Powered by AI</Text>
 
+            {/* Photo picker buttons */}
             <View style={styles.buttonSpacing}>
               <Button title="📷 Take Photo" onPress={() => pickImage(true)} />
             </View>
@@ -144,15 +139,21 @@ export default function CatBreedScreen() {
               <Button title="🖼️ Choose from Gallery" onPress={() => pickImage(false)} />
             </View>
 
+            {/* Display selected image with rounded corners and shadow */}
             {imageUri && (
-              <Image
-                source={{ uri: imageUri }}
-                style={styles.image}
-                resizeMode="contain"
-              />
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={{ uri: imageUri }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              </View>
             )}
+
+            {/* Loading indicator */}
             {loading && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
 
+            {/* AI result display */}
             {aiResult && (
               <View style={styles.resultBox}>
                 <Text style={styles.resultLabel}>Breed:</Text>
@@ -182,37 +183,44 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  buttonSpacing: {
-    marginVertical: 6,
-  },
   container: {
     flexGrow: 1,
-    paddingBottom: 120, // 👉 больше места снизу
-  },
-  fillButton: {
-    alignItems: 'center',
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    marginTop: 16,
-    paddingVertical: 12,
-  },
-  fillButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  image: {
-    alignSelf: 'center',
-    aspectRatio: 4 / 3,
-    borderRadius: 16,
-    marginVertical: 10,
-    width: '100%',
+    paddingBottom: 120,
   },
   overlay: {
     backgroundColor: 'rgba(255,255,255,0.85)',
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: Platform.OS === 'ios' ? 60 : 15,
+  },
+  title: {
+    fontSize: 20,
+    marginTop: 32,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  buttonSpacing: {
+    marginVertical: 6,
+  },
+  imageWrapper: {
+    alignSelf: 'center',
+    width: '90%',
+    aspectRatio: 4 / 3,
+    borderRadius: 20,
+    overflow: 'hidden', // Required to clip corners
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+    backgroundColor: '#fff',
+    marginVertical: 16,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20, // Must match imageWrapper to round
   },
   resultBox: {
     backgroundColor: '#f4f4f4',
@@ -228,11 +236,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
   },
-  title: {
-    fontSize: 20,
-    marginTop: 32, // 👉 увеличенный отступ сверху
+  fillButton: {
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    marginTop: 16,
+    paddingVertical: 12,
+  },
+  fillButtonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
   },
 });

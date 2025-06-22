@@ -1,0 +1,36 @@
+ROOT/
+│
+├── app/
+│   ├── index.tsx                <-- редирект в /tabs
+│   ├── +not-found.tsx
+│   ├── _layout.tsx              <-- главный layout
+│   │
+│   └── (tabs)/
+│       ├── _layout.tsx
+│       ├── cat-breed.tsx
+│       ├── cat-details.js
+│       ├── favorite.tsx
+│       ├── index.tsx            <-- главная вкладка
+│       └── new-item.tsx
+│
+├── components/
+│   ├── _test_/                  <-- тесты, возможно пусто
+│   ├── context/
+│   │   ├── CatContext.ts
+│   │   └── CatProvider.tsx
+│   │
+│   └── ui/
+│       ├── CatCard.tsx
+│       ├── Collapsible.tsx
+│       ├── ExternalLink.tsx
+│       ├── HapticTab.tsx
+│       ├── HelloWave.tsx
+│       ├── ParallaxScrollView.tsx
+│       ├── ThemedText.tsx
+│       └── ThemedView.tsx
+│
+├── lib/
+│   ├── deleteCatWithImage.ts
+│   ├── supabase.ts
+│   ├── uploadCats.ts
+│   └── uploadToStorage.ts

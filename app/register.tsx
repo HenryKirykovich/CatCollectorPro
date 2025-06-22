@@ -42,7 +42,7 @@ export default function RegisterScreen() {
       });
 
       if (insertError) {
-        console.error('❌ Ошибка вставки в таблицу users:', insertError.message);
+        console.error('❌ Errors inplementation data to users:', insertError.message);
         Alert.alert('User Insert Error', insertError.message);
         return;
       }
