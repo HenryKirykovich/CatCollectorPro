@@ -42,7 +42,7 @@ export default function RegisterScreen() {
       });
 
       if (insertError) {
-        console.error('❌ Errors inplementation data to users:', insertError.message);
+        console.error('❌ Error inserting data:', insertError.message);
         Alert.alert('User Insert Error', insertError.message);
         return;
       }
@@ -64,6 +64,12 @@ export default function RegisterScreen() {
         keyboardVerticalOffset={60}
       >
         <SafeAreaView style={styles.overlay}>
+          {/* Project title */}
+          <View style={styles.projectTitleContainer}>
+            <Text style={styles.projectTitle}>Catalyze</Text>
+          </View>
+
+          {/* Register form */}
           <View style={styles.container}>
             <Text style={styles.title}>Create Your Account</Text>
 
@@ -107,6 +113,14 @@ export default function RegisterScreen() {
               <Text style={styles.link}>Already have an account? Log in</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <Text style={styles.footerVersion}>v1.0</Text>
+            <Text style={styles.footerCredits}>
+              © All rights reserved. Created by Henadzi (Henry) Kirykovich
+            </Text>
+          </View>
         </SafeAreaView>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -117,6 +131,49 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     width: '100%',
+  },
+  overlay: {
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  projectTitleContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  projectTitle: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#B22222',
+    fontFamily: Platform.OS === 'ios' ? 'HelveticaNeue-Bold' : 'Roboto',
+  },
+  container: {
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    elevation: 4,
+    maxWidth: 400,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    width: '100%',
+    marginTop: 30,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  input: {
+    backgroundColor: '#f9f9f9',
+    borderColor: '#ccc',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 12,
+    padding: 12,
   },
   button: {
     alignItems: 'center',
@@ -130,42 +187,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  container: {
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    elevation: 4,
-    maxWidth: 400,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    width: '100%',
-  },
-  input: {
-    backgroundColor: '#f9f9f9',
-    borderColor: '#ccc',
-    borderRadius: 8,
-    borderWidth: 1,
-    marginBottom: 12,
-    padding: 12,
-  },
   link: {
     color: '#007AFF',
     fontSize: 14,
     marginTop: 16,
     textAlign: 'center',
   },
-  overlay: {
-    backgroundColor: 'rgba(255,255,255,0.85)',
+  footer: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
+    justifyContent: 'flex-end',
+    paddingBottom: 12,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 24,
+  footerVersion: {
+    position: 'absolute',
+    bottom: 10,
+    right: 20,
+    fontSize: 12,
+    color: '#777',
+  },
+  footerCredits: {
     textAlign: 'center',
+    fontSize: 12,
+    color: '#777',
+    marginBottom: 10,
   },
 });

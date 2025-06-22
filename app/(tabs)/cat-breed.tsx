@@ -183,25 +183,29 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
+  buttonSpacing: {
+    marginVertical: 6,
+  },
   container: {
     flexGrow: 1,
     paddingBottom: 120,
   },
-  overlay: {
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 15,
+  fillButton: {
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    marginTop: 16,
+    paddingVertical: 12,
   },
-  title: {
-    fontSize: 20,
-    marginTop: 32,
+  fillButtonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
   },
-  buttonSpacing: {
-    marginVertical: 6,
+  image: {
+    borderRadius: 20,
+    height: '100%',
+    width: '100%', // Must match imageWrapper to round
   },
   imageWrapper: {
     alignSelf: 'center',
@@ -217,10 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginVertical: 16,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 20, // Must match imageWrapper to round
+  overlay: {
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: Platform.OS === 'ios' ? 60 : 15,
   },
   resultBox: {
     backgroundColor: '#f4f4f4',
@@ -236,16 +241,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
   },
-  fillButton: {
-    alignItems: 'center',
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    marginTop: 16,
-    paddingVertical: 12,
-  },
-  fillButtonText: {
-    color: '#fff',
-    fontSize: 16,
+  title: {
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 16,
+    marginTop: 32,
+    textAlign: 'center',
   },
 });
