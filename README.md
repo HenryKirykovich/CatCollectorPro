@@ -15,7 +15,7 @@ This link opens a live version of the app and displays a QR code for mobile acce
 
 #### Option 1: 📱 Using Expo Go (Recommended)
 1. Install the **Expo Go** app on your phone: [expo.dev/client](https://expo.dev/client)
-2. Open this link on desktop: [https://expo.dev/@groo21021984/catalyze](https://expo.dev/@groo21021984/catalyze)
+2. Open this link on desktop: [https://expo.dev/@groo21021984/catalyze](https://expo.dev/preview/update?message=Updated%20client%20version%3A%20June%2020&updateRuntimeVersion=1.0.0&createdAt=2025-06-22T04%3A03%3A06.306Z&slug=exp&projectId=5e72242f-4cee-473d-bb5f-f4a56cf35839&group=1a540d3e-70f3-4941-b71c-40ed7ebbef63)
 3. Scan the QR code using the **Expo Go** app
 4. The app will load instantly — no installation needed
 
